@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.onefengma.wmclient2.AddDeviceActivity" >
+
+    <item
+        android:id="@+id/action_add_devices"
+        android:title="@string/title_activity_add_device"
+        android:icon="@drawable/add_device"
+        app:showAsAction="always"/>
+
+</menu>

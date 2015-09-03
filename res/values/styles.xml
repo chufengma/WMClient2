@@ -1,0 +1,84 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="ProgressingDialog" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/common_dialog_bg</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="colorPrimary">@color/main</item>
+        <item name="actionMenuTextAppearance">@style/MenuTextStyle</item>
+        <item name="actionBarPopupTheme">@style/PupupMenuTheme</item>
+        <item name="actionDropDownStyle">@style/DropDowmStyle</item>
+        <item name="dropDownListViewStyle">@style/DropDownListViewStyle</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+    </style>
+
+    <style name="AnimationActivity" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:activityOpenExitAnimation">@android:anim/slide_out_right</item>
+        <item name="android:activityCloseEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@android:anim/slide_out_right</item>
+    </style>
+
+    <style name="PupupMenuTheme" parent="@style/ThemeOverlay.AppCompat.Light">
+        <item name="android:windowBackground">@color/menu_bg</item>
+        <item name="android:colorBackground">@color/menu_bg</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:colorBackgroundCacheHint">@color/menu_bg</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="actionDropDownStyle">@style/DropDowmStyle</item>
+    </style>
+
+    <style name="DropDownListViewStyle" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:gravity">top|right</item>
+        <item name="android:width">10dip</item>
+        <item name="android:background">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="DropDowmStyle" parent="@style/Base.Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:gravity">top|right</item>
+        <item name="android:width">10dip</item>
+    </style>
+
+    <style name="OverlayAppTheme" parent="@style/AppTheme">
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="DialogAppTheme" parent="@style/AppTheme">
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@color/main</item>
+        <item name="background">@color/main</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:height">@dimen/activity_actionbar_height</item>
+    </style>
+
+    <style name="MenuTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="MenuItemStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">12dip</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/menu_item_bg</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="SettingItemStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:background">@drawable/setting_item_bg</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableRight">@drawable/ic_card_arrow_</item>
+    </style>
+
+</resources>

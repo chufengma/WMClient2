@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5d6d84"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="25dip" >
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_marginTop="40dip"
+        android:layout_width="130dip"
+        android:layout_height="130dip"
+        android:background="@drawable/account" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_marginTop="-20dip"
+        style="@style/MenuItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="用户名" />
+
+    <TextView
+        android:id="@+id/devices"
+        style="@style/MenuItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/devices_bg"
+        android:text="@string/title_activity_devices" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/replay"
+        style="@style/MenuItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="4dip"
+        android:drawableLeft="@drawable/replay_bg"
+        android:text="@string/title_activity_replay" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/notification"
+        style="@style/MenuItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="-1dip"
+        android:drawableLeft="@drawable/notification_bg"
+        android:text="@string/title_activity_notification" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/setting"
+        style="@style/MenuItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="4dip"
+        android:drawableLeft="@drawable/setting_bg"
+        android:text="@string/title_activity_setting" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@android:color/white" />
+
+</LinearLayout>

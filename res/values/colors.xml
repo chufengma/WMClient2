@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="main">#69c9ac</color>
+	<color name="main_al">#af69c9ac</color>    
+	<color name="actions_panel_lan">#71423d3b</color>    
+	<color name="actions_panel_por">#f5f5f5</color>    
+	<color name="black">#000000</color>    
+	<color name="activity_bg">#e5e5e5</color>   
+	<color name="gray">#cccccc</color>    
+	
+	<color name="menu_bg">#9f000000</color>    
+	
+	<color name="setting_item_bg">@android:color/white</color>    
+	<color name="setting_item_pressed">#3fcccccc</color>    
+
+</resources>

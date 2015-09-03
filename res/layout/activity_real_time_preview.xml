@@ -1,0 +1,166 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_panel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/actions"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="130dip" >
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="1dip"
+            android:layout_height="1dip" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/channel_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dip"
+        android:padding="15dip"
+        android:text="@string/hello_world"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:id="@+id/surface_panel"
+        android:layout_width="400dip"
+        android:layout_height="300dip"
+        android:layout_below="@id/channel_name"
+        android:layout_centerHorizontal="true" >
+
+        <View
+            android:id="@+id/surface_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/indicater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/surface_panel"
+        android:layout_marginTop="15dip"
+        android:gravity="center"
+        android:padding="15dip" >
+
+        <ImageView
+            android:id="@+id/left_indicater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dip"
+            android:padding="5dip"
+            android:src="@drawable/indicater_bg_left"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/right_indicater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:padding="5dip"
+            android:src="@drawable/indicater_bg_right"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/lan_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:onClick="clickOnLanPanel"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/brief_panel"
+        android:layout_width="match_parent"
+        android:layout_above="@id/actions"
+        android:orientation="vertical"
+        android:layout_height="wrap_content" >
+        <TextView
+            android:id="@+id/all_flow"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@id/actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#f5f5f5"
+        android:padding="15dip" >
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:src="@drawable/image_bg" />
+
+        <ImageView
+            android:id="@+id/record_vedio"
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:src="@drawable/record_vedio_bg" />
+
+        <ImageView
+            android:id="@+id/record_voice"
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:src="@drawable/record_voice_bg" />
+
+        <ImageView
+            android:id="@+id/voice"
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:src="@drawable/voice_bg" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/cloud_controll"
+        android:layout_width="150dip"
+        android:layout_height="150dip"
+        android:layout_above="@+id/cloud"
+        android:layout_marginBottom="15dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:layout_marginTop="15dip"
+        layout="@layout/cloud_control"
+        android:background="@color/actions_panel_lan" />
+
+    <ImageView
+        android:id="@id/cloud"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="8dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:layout_marginTop="15dip"
+        android:onClick="onClick"
+        android:src="@drawable/cloud_button_bg"
+        android:visibility="gone" />
+
+</RelativeLayout>
