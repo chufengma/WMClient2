@@ -25,7 +25,7 @@ import android.widget.Toast;
 public class ChannelListActivity extends BaseBackActivity implements OnDateSetListener, OnTimeSetListener{
 	
 	private PullToRefreshExpandableListView listView;
-	private DeviceAdatper adapter;
+	private SelectDeviceAdatper adapter;
 	
 	private TextView startTimeTextView;
 	private TextView endTimeTextView;
@@ -38,6 +38,13 @@ public class ChannelListActivity extends BaseBackActivity implements OnDateSetLi
 		
 		startTimeTextView = (TextView) findViewById(R.id.time1);
 		endTimeTextView = (TextView) findViewById(R.id.time2);
+		
+		listView = (PullToRefreshExpandableListView) findViewById(R.id.list);
+		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();
+		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList);
+		
+		adapter = new SelectDeviceAdatper(deviceList, this);
+		listView.getRefreshableView().setAdapter(adapter);
 	}
 	
     public static void startFrom(Activity activity) {
