@@ -39,6 +39,16 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		
 		StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
+		
+		// check update
+		//update version
+		UpdateManager updateManager = UpdateManager.getInstance(this);
+		if(updateManager.checkUpdate()) {
+			updateManager.downLoad(updateManager.getVSESION());
+			ContextToast.show(this, "正在下载新版本中..", Toast.LENGTH_SHORT);
+			finish();
+		}
+		
 		// check if login
 		if(!ClientApp.getInstance().requestAddress()) {
 			LoginActivity.startFrom(this);
@@ -51,11 +61,12 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		} else {
 			LoginActivity.startFrom(this);
 			finish();
+			
 			return;
 		}
 		
 		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();
-		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList);
+		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, true);
 		
 		adapter = new DeviceAdatper(deviceList, this);
 		listView.getRefreshableView().setAdapter(adapter);
@@ -68,17 +79,21 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 					ContextToast.show(MainActivity.this, "设备不在线，无法实时预览！", Toast.LENGTH_SHORT);
 					return true;
 				}
+				
 				RealTimePreviewActivity.startFrom(MainActivity.this, device, childPosition);
+				
 				return true;
 			}
 		});
+		
 		listView.setOnRefreshListener(this);
 	}
 
 	@Override
 	public void onRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
 		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();
-		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList);
+		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, true);
+		
 		adapter.setInfos(deviceList);
 		listView.onRefreshComplete();
 	}
@@ -92,10 +107,12 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
+		
 		if (id == R.id.action_add_devices) {
 			AddDeviceActivity.startFrom(this);
 			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	

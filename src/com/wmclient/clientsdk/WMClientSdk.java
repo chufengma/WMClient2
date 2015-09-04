@@ -83,9 +83,9 @@ public class WMClientSdk
 		return m_engineer.UpdatePassword(oldPassword, newPassword);
 	}
 	
-	public int getDeviceList(List<WMDeviceInfo> deviceList) 
+	public int getDeviceList(List<WMDeviceInfo> deviceList, boolean bForceRefresh) 
 	{
-		if(m_deviceList == null)
+		if(m_deviceList == null || bForceRefresh)
 		{
 			m_deviceList = m_engineer.GetDeviceList();
 		}	

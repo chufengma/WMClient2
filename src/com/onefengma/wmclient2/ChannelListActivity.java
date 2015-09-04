@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class ChannelListActivity extends BaseBackActivity implements OnDateSetListener, OnTimeSetListener{
+public class ChannelListActivity extends BaseBackActivity {
 	
 	private PullToRefreshExpandableListView listView;
 	private SelectDeviceAdatper adapter;
@@ -41,7 +41,7 @@ public class ChannelListActivity extends BaseBackActivity implements OnDateSetLi
 		
 		listView = (PullToRefreshExpandableListView) findViewById(R.id.list);
 		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();
-		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList);
+		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, false);
 		
 		adapter = new SelectDeviceAdatper(deviceList, this);
 		listView.getRefreshableView().setAdapter(adapter);
@@ -67,12 +67,18 @@ public class ChannelListActivity extends BaseBackActivity implements OnDateSetLi
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear,
 					int dayOfMonth) {
+				if (!view.isShown()) {
+					return;
+				}
 				holder.year = year;
 				holder.month = monthOfYear + 1;
 				holder.day = dayOfMonth;
 				TimePickerDialog timeDialog = new TimePickerDialog(ChannelListActivity.this, new OnTimeSetListener() {
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+						if (!view.isShown()) {
+							return;
+						}
 						holder.hour = hourOfDay;
 						holder.minitue = minute;
 						timeView.setText(time.toString() + holder.toString());
@@ -87,16 +93,6 @@ public class ChannelListActivity extends BaseBackActivity implements OnDateSetLi
     public void onPlayClick(View view) {
     	ContextToast.show(this, "还没有视频可供播放", Toast.LENGTH_SHORT);
     }
-
-	@Override
-	public void onDateSet(DatePicker view, int year, int monthOfYear,
-			int dayOfMonth) {
-	}
-
-	@Override
-	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-		
-	}
     
 	class TimeHolder {
 		int year;
@@ -107,8 +103,14 @@ public class ChannelListActivity extends BaseBackActivity implements OnDateSetLi
 		
 		@Override
 		public String toString() {
-			return year + "-" + month + "-" + day + "  " + hour + ":" + (minitue/10 > 1 ? (minitue + "") : ("0" + minitue));
+			return year + "-" + getFormateStr(month) + "-" + getFormateStr(day) + "  " + getFormateStr(hour) + ":" + getFormateStr(minitue);
+		}
+		
+		public String getFormateStr(int num) {
+			return (num > 10 ? (num + "") : ("0" + num));
 		}
 	}
+	
+	
 	
 }

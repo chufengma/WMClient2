@@ -35,6 +35,8 @@ public class Constants
 	public static final int ErrorCode_DirectoryDeleteError = 29;
 	public static final int ErrorCode_CacheDataNotEnough = 30;
 	public static final int ErrorCode_VersionTooLow = 31;
+	public static final int ErrorCode_UserNameExists = 32;
+	public static final int ErrorCode_PasswordError = 33;
 	
 	public static final int DEVICE_TYPE_INVALID = -1;
 	public static final int DEVICE_TYPE_RTSP_DEV = 0;

@@ -59,9 +59,22 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 				if (msg.what != LOGIN) {
 					return;
 				}
+				
 				dialog.dismiss();
-				if (msg.arg1 != Constants.success) {
-					ContextToast.show(LoginActivity.this, "登陆失败，请重试...", Toast.LENGTH_SHORT);
+				
+				if (msg.arg1 == Constants.ErrorCode_PasswordError) {
+					ContextToast.show(LoginActivity.this, "登陆失败，密码错误...", Toast.LENGTH_SHORT);
+				} else if(msg.arg1 == Constants.ErrorCode_AccountError) {
+					ContextToast.show(LoginActivity.this, "登陆失败，用户名不存在...", Toast.LENGTH_SHORT);
+				} else if(msg.arg1 == Constants.ErrorCode_VersionTooLow) {
+					ContextToast.show(LoginActivity.this, "登陆失败，版本太低...", Toast.LENGTH_SHORT);
+					//update version
+					UpdateManager updateManager = UpdateManager.getInstance(LoginActivity.this);
+					if(updateManager.checkUpdate()) {
+						updateManager.downLoad(updateManager.getVSESION());
+						ContextToast.show(LoginActivity.this, "正在下载新版本中..", Toast.LENGTH_SHORT);
+						finish();
+					}
 				} else {
 					ClientApp.getInstance().setHasLogin(true);
 					MainActivity.startFrom(LoginActivity.this);
