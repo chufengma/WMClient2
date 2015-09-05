@@ -40,15 +40,6 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		
-		// check update
-		//update version
-		UpdateManager updateManager = UpdateManager.getInstance(this);
-		if(updateManager.checkUpdate()) {
-			updateManager.downLoad(updateManager.getVSESION());
-			ContextToast.show(this, "正在下载新版本中..", Toast.LENGTH_SHORT);
-			finish();
-		}
-		
 		// check if login
 		if(!ClientApp.getInstance().requestAddress()) {
 			LoginActivity.startFrom(this);
@@ -61,7 +52,6 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		} else {
 			LoginActivity.startFrom(this);
 			finish();
-			
 			return;
 		}
 		

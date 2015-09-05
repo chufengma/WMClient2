@@ -12,6 +12,7 @@ import com.wmclient.clientsdk.Constants;
 import com.wmclient.clientsdk.DebugLogger;
 import com.wmclient.clientsdk.Utils;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,14 +69,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 				} else if(msg.arg1 == Constants.ErrorCode_AccountError) {
 					ContextToast.show(LoginActivity.this, "登陆失败，用户名不存在...", Toast.LENGTH_SHORT);
 				} else if(msg.arg1 == Constants.ErrorCode_VersionTooLow) {
-					ContextToast.show(LoginActivity.this, "登陆失败，版本太低...", Toast.LENGTH_SHORT);
 					//update version
-					UpdateManager updateManager = UpdateManager.getInstance(LoginActivity.this);
+					final UpdateManager updateManager = UpdateManager.getInstance(LoginActivity.this);
 					if(updateManager.checkUpdate()) {
-						updateManager.downLoad(updateManager.getVSESION());
-						ContextToast.show(LoginActivity.this, "正在下载新版本中..", Toast.LENGTH_SHORT);
-						finish();
+						UpdateManager.getInstance(LoginActivity.this).downLoad(updateManager.getVSESION());
+						ContextToast.show(LoginActivity.this, "客户端版本太低，正在下载新版本，请稍后...", Toast.LENGTH_SHORT);
+					} else {
+						ContextToast.show(LoginActivity.this, "登陆失败，版本太低...", Toast.LENGTH_SHORT);
 					}
+					loginButton.setEnabled(false);
 				} else {
 					ClientApp.getInstance().setHasLogin(true);
 					MainActivity.startFrom(LoginActivity.this);
