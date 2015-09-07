@@ -142,8 +142,8 @@ public class StreamPlayer implements RealPlayCallBack
 		}	
 		else
 		{
-			notifySuccess();
 			m_player.InputData(pDataBuffer, iDataSize);
+			notifySuccess();
 		}		
 		
 

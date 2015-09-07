@@ -16,18 +16,17 @@ import android.os.Message;
 import android.widget.Toast;
 
 public class RealStreamPlayer {
-	private StreamPlayer mPlayer;
 	private int playerId = Constants.WMPLAYERID_INVALID;
 	private boolean isRecording;
 	private boolean isStoped = true;
 	private PlayRunnable pendingPlayRunnable;
+	private StreamPlayer currentPlayer;
 	
 	public RealStreamPlayer(Handler handler) {
 	}
 
 	public void startPlay(final int deviceId, final int channelId,
 			final StreamPlayer player) {
-		mPlayer = player;
 		if (!isStoped) {
 			DebugLogger.i("is not stoped, add pending runnable");
 			pendingPlayRunnable = new PlayRunnable(deviceId, channelId, player);
@@ -51,8 +50,10 @@ public class RealStreamPlayer {
 		@Override
 		public void run() {
 			try {
+				DebugLogger.i("start play in sub thread");
 				playerId = ClientApp.getInstance().GetSdkInterface()
 						.startRealPlay(deviceId, channelId, player);
+				currentPlayer = player;
 				DebugLogger.i("start play:" + deviceId + ":" + channelId
 						+ "  playId:" + playerId + ":" + player);
 				if (playerId == Constants.WMPLAYERID_INVALID) {
@@ -63,19 +64,17 @@ public class RealStreamPlayer {
 				synchronized (RealStreamPlayer.this) {
 					RealStreamPlayer.this.wait();
 				}
-				DebugLogger.i("stop in sub thread");
+				DebugLogger.i("stop in sub thread:" + playerId);
 				ClientApp.getInstance().GetSdkInterface()
-				 .DestroyPlayer(mPlayer);
-				if (playerId != Constants.WMPLAYERID_INVALID)
-					ClientApp.getInstance().GetSdkInterface()
-							.stopRealPlay(playerId);
-				isStoped = true;
-				
+						.stopRealPlay(playerId);
+				ClientApp.getInstance().GetSdkInterface()
+						.DestroyPlayer(player);
 				if (pendingPlayRunnable != null) {
 					DebugLogger.i("pending runnable running");
 					new Thread(pendingPlayRunnable).start();
 					pendingPlayRunnable = null;
 				}
+				isStoped = true;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -210,15 +209,24 @@ public class RealStreamPlayer {
 	}
 
 	public int getPlayTime() {
-		return mPlayer.GetPlayTime();
+		if (currentPlayer == null) {
+			return 0;
+		}
+		return currentPlayer.GetPlayTime();
 	}
 
 	public long getAllRecvLen() {
-		return mPlayer.GetAllRecvLen();
+		if (currentPlayer == null) {
+			return 0;
+		}
+		return currentPlayer.GetAllRecvLen();
 	}
 
 	public int getReate() {
-		return mPlayer.GetCodeRate();
+		if (currentPlayer == null) {
+			return 0;
+		}
+		return currentPlayer.GetCodeRate();
 	}
 
 }
