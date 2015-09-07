@@ -82,7 +82,9 @@ public class MenuBaseActivity extends AppCompatActivity {
 					return;
 				}
 				SettingActivity.startFrom(MenuBaseActivity.this);
-				finish();
+				if (!(MenuBaseActivity.this instanceof MainActivity)) {
+					finish();
+				}
 			}
 		});
 		
@@ -93,8 +95,11 @@ public class MenuBaseActivity extends AppCompatActivity {
 					mDrawer.toggleMenu();	
 					return;
 				}
-				NotificationActivity.startFrom(MenuBaseActivity.this);		
-				finish();
+
+				NotificationActivity.startFrom(MenuBaseActivity.this);	
+				if (!(MenuBaseActivity.this instanceof MainActivity)) {
+					finish();
+				}	
 			}
 		});
 		
@@ -105,7 +110,7 @@ public class MenuBaseActivity extends AppCompatActivity {
 					mDrawer.toggleMenu();	
 					return;
 				}
-				MainActivity.startFrom(MenuBaseActivity.this);		
+				MainActivity.startFromMenu(MenuBaseActivity.this);		
 				finish();
 			}
 		});
@@ -119,7 +124,9 @@ public class MenuBaseActivity extends AppCompatActivity {
 					return;
 				}
 				ReplayActivity.startFrom(MenuBaseActivity.this);
-				finish();
+				if (!(MenuBaseActivity.this instanceof MainActivity)) {
+					finish();
+				}
 			}
 		});
 	}

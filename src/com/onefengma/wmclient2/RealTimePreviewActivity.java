@@ -281,7 +281,7 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 		surfacePanel.setLayoutParams(lp);
 		
 		String name = deviceInfo.getChannelArr()[viewPager.getCurrentItem()].getChannelName();
-		name = Utils.isEmpty(name) ? "通道" + viewPager.getCurrentItem() : name;
+		name = Utils.isEmpty(name) ? "通道" + (viewPager.getCurrentItem()+1) : name;
 		setTitle(name);
 		
 		surfaceMaskView.setOnTouchListener(this);
@@ -461,7 +461,7 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 	
 	private void setChannelName(int position) {
 		String name = deviceInfo.getChannelArr()[position].getChannelName();
-		channelName.setText(Utils.isEmpty(name) ? "通道" + position : name);
+		channelName.setText(Utils.isEmpty(name) ? "通道" + (position+1) : name);
 		setIndicaterStatus(position);
 		if (mOritetation == Configuration.ORIENTATION_LANDSCAPE) {
 			setTitle(name);

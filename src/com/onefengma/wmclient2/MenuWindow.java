@@ -76,7 +76,7 @@ public class MenuWindow extends PopupWindow {
 				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_list_item, parent, false);
 			}
 			String channelNameString = getItem(position).getChannelName();
-		    ((TextView)convertView).setText(Utils.isEmpty(channelNameString) ? "通道" + position : channelNameString);
+		    ((TextView)convertView).setText(Utils.isEmpty(channelNameString) ? "通道" + (position+1) : channelNameString);
 			return convertView;
 		}
 		

@@ -230,6 +230,11 @@ public class ClientApp extends Application {
     	}
     } 
     
+    public void logout() {
+    	bLogin = false;
+    	GetSdkInterface().logout();
+    }
+    
     public void exit() {
     	for(Activity activity : activities) {
     		activity.finish();

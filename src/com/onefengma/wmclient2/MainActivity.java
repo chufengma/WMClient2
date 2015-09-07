@@ -8,13 +8,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.wmclient.clientsdk.Constants;
+import com.wmclient.clientsdk.DebugLogger;
 import com.wmclient.clientsdk.WMDeviceInfo;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 public class MainActivity extends MenuBaseActivity implements  OnRefreshListener<ExpandableListView> {
 	
+	private static final String EXTRA_FIRST = "first";
 	private PullToRefreshExpandableListView listView;
 	private DeviceAdatper adapter;
 	private List<WMDeviceInfo> deviceList;
@@ -31,6 +32,12 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		activity.startActivity(new Intent(activity, MainActivity.class));
 	}
 	
+	public static void startFromMenu(Activity activity) {
+		Intent intent = new Intent(activity, MainActivity.class);
+		intent.putExtra(EXTRA_FIRST, false);
+		activity.startActivity(intent);
+	} 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,26 +45,9 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		setTitle(R.string.title_activity_devices);
 		listView = (PullToRefreshExpandableListView) findViewById(R.id.list);
 		
-		StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy);
-		
-		// check if login
-		if(!ClientApp.getInstance().requestAddress()) {
-			LoginActivity.startFrom(this);
-			finish();
-			return;
-		}
-		
-		if (ClientApp.getInstance().isAccountExisted() && ClientApp.getInstance().login()) {
-			nameView.setText(ClientApp.getInstance().getUserName());
-		} else {
-			LoginActivity.startFrom(this);
-			finish();
-			return;
-		}
+		checkLogin();
 		
 		deviceList = new ArrayList<WMDeviceInfo>();
-		
 		adapter = new DeviceAdatper(deviceList, this);
 		listView.getRefreshableView().setAdapter(adapter);
 		listView.getRefreshableView().setOnChildClickListener(new OnChildClickListener() {
@@ -69,22 +59,65 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 					ContextToast.show(MainActivity.this, "设备不在线，无法实时预览！", Toast.LENGTH_SHORT);
 					return true;
 				}
-				
 				RealTimePreviewActivity.startFrom(MainActivity.this, device, childPosition);
-				
 				return true;
 			}
 		});
 		
 		listView.setOnRefreshListener(this);
-		loadDeviceList();
 	}
 	
-	public void loadDeviceList() {
+	public void checkLogin() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, true);
+				// check if login
+				if(!ClientApp.getInstance().requestAddress()) {
+					startLogin();
+				}
+				if (ClientApp.getInstance().isAccountExisted() && ClientApp.getInstance().login()) {
+					deviceGoon();
+				} else {
+					startLogin();
+				}
+			}
+		}).start();
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		DebugLogger.i("new intent");
+		mDrawer.closeMenu(false);
+	}
+	
+	public void deviceGoon() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				nameView.setText(ClientApp.getInstance().getUserName());
+				loadDeviceList();
+			}
+		});
+	}
+	
+	public void startLogin() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				LoginActivity.startFrom(MainActivity.this);
+				finish();
+				return;
+			}
+		});
+	}
+	
+	public void loadDeviceList() {
+		final boolean first = getIntent().getBooleanExtra(EXTRA_FIRST, true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, first);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -97,9 +130,8 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 	
 	@Override
 	public void onRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();
+		deviceList = new ArrayList<WMDeviceInfo>();
 		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, true);
-		
 		adapter.setInfos(deviceList);
 		listView.onRefreshComplete();
 	}
