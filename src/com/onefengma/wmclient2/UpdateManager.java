@@ -12,12 +12,14 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.app.DownloadManager;
+import android.app.DownloadManager.Query;
 import android.app.DownloadManager.Request;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -27,13 +29,16 @@ import com.wmclient.clientsdk.DebugLogger;
 public class UpdateManager {
 
 	public static final String DOWNLOAD_FOLDER_NAME = "veye";
+	public static final String DOWNLOAD_FILE_NAME_PREX = "veye";
 	private Context context;
-	private static long DOWN_ID;
+	private static long DOWN_ID = -1;
 	private static UpdateManager instance;
 	
 	private static String VSESION;
 	private static String DETAILS;
-	private static String FILE_NAME = "veye";;
+	private static String FILE_NAME = "";
+	
+	DownloadManager manager;
 	
 	public static UpdateManager getInstance(Context context) {
 		if (instance == null) {
@@ -44,6 +49,8 @@ public class UpdateManager {
 	
 	private UpdateManager(Context context) {
 		this.context = context;
+		manager = (DownloadManager) context
+				.getSystemService(Context.DOWNLOAD_SERVICE);
 	}
 	
 	public long getDownId() {
@@ -76,16 +83,55 @@ public class UpdateManager {
 	}
 
 	public void downLoad(String version) {
-		FILE_NAME = FILE_NAME + version + ".apk";
+		FILE_NAME = DOWNLOAD_FILE_NAME_PREX + version + ".apk";
 		String url = ClientApp.HOST + FILE_NAME;
-		DownloadManager manager = (DownloadManager) context
-				.getSystemService(Context.DOWNLOAD_SERVICE);
 		DownloadManager.Request request = new Request(Uri.parse(url));
 		request.setDescription("正在下载中...");
 		request.setDestinationInExternalPublicDir(DOWNLOAD_FOLDER_NAME, FILE_NAME);
 		DOWN_ID = manager.enqueue(request);
+		ClientApp.getInstance().saveDownloadId(DOWN_ID);
+		DebugLogger.i(DOWN_ID + "");
 	}
-
+	
+	public void setDownId(long id) {
+		this.DOWN_ID = id;
+	}
+	
+	public boolean checkStatus() {
+		if (DOWN_ID == -1) {
+			return false;
+		}
+		Query query = new Query();
+		query.setFilterById(DOWN_ID);
+		DebugLogger.i(DOWN_ID + "");
+		Cursor cursor = manager.query(query);
+		if (cursor == null) {
+			return false;
+		}
+		if (cursor.moveToFirst()) {
+			int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+			DebugLogger.i(DOWN_ID + ":status:" + status);
+			DebugLogger.i(cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON)) + "");
+			return status == DownloadManager.STATUS_RUNNING || status == DownloadManager.STATUS_RUNNING || status == DownloadManager.STATUS_PENDING;
+		} 
+		DebugLogger.i(DOWN_ID + ":cursor null");
+		return false;
+	}
+	
+	public float getProgress() {
+		Query query = new Query();
+		query.setFilterById(DOWN_ID);
+		DebugLogger.i(DOWN_ID + "");
+		Cursor cursor = manager.query(query);
+		if (cursor.moveToFirst()) {
+			long sofar = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+			long all = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+			DebugLogger.i(DOWN_ID + ":sofar:" + sofar + "--all:" + all);
+			return sofar / all;
+		} 
+		return 0;
+	}
+	
 	public String getVSESION() {
 		return VSESION;
 	}

@@ -25,6 +25,7 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 	
 	private PullToRefreshExpandableListView listView;
 	private DeviceAdatper adapter;
+	private List<WMDeviceInfo> deviceList;
 	
 	public static void startFrom(Activity activity) {
 		activity.startActivity(new Intent(activity, MainActivity.class));
@@ -55,8 +56,7 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 			return;
 		}
 		
-		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();
-		ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, true);
+		deviceList = new ArrayList<WMDeviceInfo>();
 		
 		adapter = new DeviceAdatper(deviceList, this);
 		listView.getRefreshableView().setAdapter(adapter);
@@ -77,8 +77,24 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		});
 		
 		listView.setOnRefreshListener(this);
+		loadDeviceList();
 	}
-
+	
+	public void loadDeviceList() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ClientApp.getInstance().GetSdkInterface().getDeviceList(deviceList, true);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						adapter.setInfos(deviceList);
+					}
+				});
+			}
+		}).start();
+	}
+	
 	@Override
 	public void onRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
 		List<WMDeviceInfo> deviceList = new ArrayList<WMDeviceInfo>();

@@ -33,6 +33,7 @@ public class ClientApp extends Application {
 	private static final String SP_USER_PWD = "password";
 	private static final String SP_USER_NEED_LOGIN = "need_login";
 	private static final String SP_CLOUD_LENGTH = "cloud_length";
+	private static final String SP_DOWNLOAD_ID = "download_id";
 	private static final String SP_PATH = "path";
 	private static final String SP_VIDEO_PATH = "path";
 	
@@ -200,6 +201,14 @@ public class ClientApp extends Application {
         
     public void saveCloudLength(int length) {
     	sp.edit().putInt(SP_CLOUD_LENGTH, length).commit();
+    }
+    
+    public void saveDownloadId(long id) {
+    	sp.edit().putLong(SP_DOWNLOAD_ID, id).commit();
+    }
+    
+    public long getDownloadId() {
+    	return sp.getLong(SP_DOWNLOAD_ID, -1);
     }
     
     public void saveCaptureImagePath(String path) {
