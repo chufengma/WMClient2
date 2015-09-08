@@ -28,7 +28,7 @@ public class SurfaceViewPager extends PagerAdapter {
 	private static final int mask = 0x01000000;
 
 	private int currentPosition = -1;
-	
+
 	public SurfaceViewPager(Context context, WMDeviceInfo deviceInfo) {
 		this.deviceInfo = deviceInfo;
 		this.channelInfos = deviceInfo.getChannelArr();
@@ -49,10 +49,19 @@ public class SurfaceViewPager extends PagerAdapter {
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-	    // stop(position);
+		// stop(position);
 		// container.removeView((View) object);
 	}
-	
+
+	public void stooCurrentPosition() {
+		// stop pre
+		if (currentPosition != -1) {
+			if (players.get(currentPosition) != null) {
+				stop(currentPosition);
+			}
+		}
+	}
+
 	public void setCurrentPosition(int position) {
 		// stop pre
 		if (currentPosition != -1) {
@@ -60,9 +69,9 @@ public class SurfaceViewPager extends PagerAdapter {
 				stop(currentPosition);
 			}
 		}
-		
+
 		// start new
-		View view  = cacheViews.get(position);
+		View view = cacheViews.get(position);
 		if (view == null) {
 			DebugLogger.i("view do not cached!");
 			this.currentPosition = position;
@@ -72,7 +81,7 @@ public class SurfaceViewPager extends PagerAdapter {
 		play(surface, position);
 		this.currentPosition = position;
 	}
-	
+
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		View view = cacheViews.get(position);
@@ -80,14 +89,13 @@ public class SurfaceViewPager extends PagerAdapter {
 			view = LayoutInflater.from(context).inflate(R.layout.surface_view,
 					container, false);
 			cacheViews.put(position, view);
-		    SurfaceView surface = (SurfaceView) view
-					.findViewById(R.id.surface);
-			if(Constants.DEVICE_TYPE_XM_DEV == deviceInfo.getDevType()) {
+			SurfaceView surface = (SurfaceView) view.findViewById(R.id.surface);
+			if (Constants.DEVICE_TYPE_XM_DEV == deviceInfo.getDevType()) {
 				DebugLogger.i("XM device");
 				SurfaceView glSurfaceView = new VideoDecoder(context);
 				glSurfaceView.setLayoutParams(surface.getLayoutParams());
-				((ViewGroup)view).removeViewAt(0);
-				((ViewGroup)view).addView(glSurfaceView, 0);
+				((ViewGroup) view).removeViewAt(0);
+				((ViewGroup) view).addView(glSurfaceView, 0);
 				view.setTag(glSurfaceView);
 			} else {
 				view.setTag(surface.getHolder());
@@ -102,55 +110,60 @@ public class SurfaceViewPager extends PagerAdapter {
 		final StreamPlayer streamPlayer = ClientApp.getInstance()
 				.GetSdkInterface()
 				.CreatePlayer(deviceInfo.getDevType(), surface);
-		streamPlayer.setOnStreamPlayerListener(new StreamPlayer.OnStreamPlayerListener() {
-			@Override
-			public void onSuccess() {
-				changeLoadingStatus(position, View.GONE);
-			}
-			
-			@Override
-			public void onStart() {
-				changeLoadingStatus(position, View.VISIBLE);
-			}
-			
-			@Override
-			public void onFailed() {
-				changeLoadingStatus(position, View.GONE);
-			}
-		});
-		
+		streamPlayer
+				.setOnStreamPlayerListener(new StreamPlayer.OnStreamPlayerListener() {
+					@Override
+					public void onSuccess() {
+						changeLoadingStatus(position, View.GONE);
+					}
+
+					@Override
+					public void onStart() {
+						changeLoadingStatus(position, View.VISIBLE);
+					}
+
+					@Override
+					public void onFailed() {
+						changeLoadingStatus(position, View.GONE);
+					}
+				});
+
 		RealStreamPlayer realStreamPlayer = players.get(position);
 		if (realStreamPlayer == null) {
-		    realStreamPlayer = new RealStreamPlayer(
-					new Handler());
+			realStreamPlayer = new RealStreamPlayer(new Handler());
 			players.put(position, realStreamPlayer);
 		}
-		//int delay  = position * 500;
+		// int delay = position * 500;
 		changeLoadingStatus(position, View.VISIBLE);
-	    realStreamPlayer.startPlay(deviceInfo.getDevId(),mask + channelInfos[position].getChannelId(), streamPlayer);
-//		new PlayerLine(delay, delay).start(deviceInfo.getDevId(), mask
-//						+ channelInfos[position].getChannelId(), streamPlayer, realStreamPlayer);
-	    
-	    ((RealTimePreviewActivity)context).startBriefThread(realStreamPlayer);
+		realStreamPlayer.startPlay(deviceInfo.getDevId(), mask
+				+ channelInfos[position].getChannelId(), streamPlayer);
+		// new PlayerLine(delay, delay).start(deviceInfo.getDevId(), mask
+		// + channelInfos[position].getChannelId(), streamPlayer,
+		// realStreamPlayer);
+
+		((RealTimePreviewActivity) context).startBriefThread(realStreamPlayer);
 	}
-	
+
 	public void startRecord(int position) {
-		cacheViews.get(position).findViewById(R.id.record).setVisibility(View.VISIBLE);
+		cacheViews.get(position).findViewById(R.id.record)
+				.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void stopRecord(int position) {
-		cacheViews.get(position).findViewById(R.id.record).setVisibility(View.GONE);
+		cacheViews.get(position).findViewById(R.id.record)
+				.setVisibility(View.GONE);
 	}
-	
+
 	private void changeLoadingStatus(final int position, final int status) {
 		cacheViews.get(position).postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				cacheViews.get(position).findViewById(R.id.loading).setVisibility(status);
+				cacheViews.get(position).findViewById(R.id.loading)
+						.setVisibility(status);
 			}
 		}, 2000);
 	}
-	
+
 	public class PlayerLine extends CountDownTimer {
 		int deviceId;
 		int channelId;
@@ -176,7 +189,7 @@ public class SurfaceViewPager extends PagerAdapter {
 
 		@Override
 		public void onFinish() {
-			playerWraPlayer.startPlay(deviceId,channelId, player);
+			playerWraPlayer.startPlay(deviceId, channelId, player);
 		}
 
 	}

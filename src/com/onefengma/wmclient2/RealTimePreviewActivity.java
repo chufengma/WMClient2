@@ -83,6 +83,8 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 	private BriefRunnable briefRunnable;
 	private boolean stopThread = false;
 	
+	private int currentPosition = -1;
+	
 	public static void startFrom(Activity activity, WMDeviceInfo device,
 			int channelIndex) {
 		Intent intent = new Intent(activity, RealTimePreviewActivity.class);
@@ -148,14 +150,15 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 		surfaceViewPager = new SurfaceViewPager(this, deviceInfo);
 		viewPager.setAdapter(surfaceViewPager);
 		viewPager.addOnPageChangeListener(this);
-		final int index = getIntent().getIntExtra(EXTRA_CHANNEL_INDEX, 0);
-		viewPager.setCurrentItem(index);
-		setChannelName(index);
+		int index = getIntent().getIntExtra(EXTRA_CHANNEL_INDEX, 0);
+		final int pos = currentPosition == -1 ? index : currentPosition;
+		viewPager.setCurrentItem(pos);
+		setChannelName(pos);
 		
 		viewPager.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				surfaceViewPager.setCurrentPosition(index);
+				surfaceViewPager.setCurrentPosition(pos);
 			}
 		}, 1000);
 		
@@ -165,11 +168,14 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 		} else {
 			changeUiWhenPortrait();
 		}
+		
+		currentPosition = -1;
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
+		currentPosition = viewPager.getCurrentItem();
 		surfaceViewPager.clear();
 	}
 	
