@@ -35,8 +35,28 @@ public class SettingActivity extends MenuBaseActivity {
 		try {
 			info = manager.getPackageInfo(this.getPackageName(), 0);
 			versionText.setText("版本号：" + info.versionName);
-			UpdateManager updateManager = UpdateManager.getInstance(this);
-			if(updateManager.checkUpdate()) {
+			checkUpdate();
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void checkUpdate() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				UpdateManager updateManager = UpdateManager.getInstance(SettingActivity.this);
+				if(updateManager.checkUpdate()) {
+					showVersionDialog(updateManager);
+				}
+			}
+		}).start();
+	}
+	
+	private void showVersionDialog(final UpdateManager updateManager) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 				final String newVersion = updateManager.getVSESION();
 				final String details = updateManager.getDETAILS();
 				versionText.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.new_version), null);
@@ -58,9 +78,8 @@ public class SettingActivity extends MenuBaseActivity {
 					}
 				});
 			}
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
+			}
+		);
 	}
 	
 	public void onClick(View view) {

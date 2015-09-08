@@ -89,8 +89,7 @@ public class DeviceAdatper extends BaseExpandableListAdapter {
 		}
 		WMDeviceInfo deviceInfo = getGroup(groupPosition);
 		WMChannelInfo channel = getChild(groupPosition, childPosition);
-		String channelName = Utils.isEmpty(channel.getChannelName()) ? "通道" + (childPosition + 1) : channel.getChannelName(); 
-		((TextView)(convertView.findViewById(R.id.name))).setText(channelName);
+		((TextView)(convertView.findViewById(R.id.name))).setText(ViewUtils.genereateChannelName(channel));
 		((ImageView)(convertView.findViewById(R.id.status))).setSelected(deviceInfo.getStatus() == Constants.DeviceStatus_Online);
 		((TextView)(convertView.findViewById(R.id.name))).setSelected(deviceInfo.getStatus() == Constants.DeviceStatus_Offline);
 		return convertView;

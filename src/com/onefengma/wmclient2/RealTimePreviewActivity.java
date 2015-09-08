@@ -280,9 +280,7 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
 		surfacePanel.setLayoutParams(lp);
 		
-		String name = deviceInfo.getChannelArr()[viewPager.getCurrentItem()].getChannelName();
-		name = Utils.isEmpty(name) ? "通道" + (viewPager.getCurrentItem()+1) : name;
-		setTitle(name);
+		setTitle(ViewUtils.genereateChannelName(deviceInfo.getChannelArr()[viewPager.getCurrentItem()]));
 		
 		surfaceMaskView.setOnTouchListener(this);
 		
@@ -460,8 +458,8 @@ public class RealTimePreviewActivity extends BaseBackActivity implements
 	}
 	
 	private void setChannelName(int position) {
-		String name = deviceInfo.getChannelArr()[position].getChannelName();
-		channelName.setText(Utils.isEmpty(name) ? "通道" + (position+1) : name);
+		String name = ViewUtils.genereateChannelName(deviceInfo.getChannelArr()[position]);
+		channelName.setText(name);
 		setIndicaterStatus(position);
 		if (mOritetation == Configuration.ORIENTATION_LANDSCAPE) {
 			setTitle(name);

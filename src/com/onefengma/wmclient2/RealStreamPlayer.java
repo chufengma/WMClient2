@@ -50,6 +50,7 @@ public class RealStreamPlayer {
 		@Override
 		public void run() {
 			try {
+				isStoped = false;
 				DebugLogger.i("start play in sub thread");
 				playerId = ClientApp.getInstance().GetSdkInterface()
 						.startRealPlay(deviceId, channelId, player);
@@ -59,16 +60,16 @@ public class RealStreamPlayer {
 				if (playerId == Constants.WMPLAYERID_INVALID) {
 					return;
 				}
-				isStoped = false;
 				// wait for stop
 				synchronized (RealStreamPlayer.this) {
 					RealStreamPlayer.this.wait();
 				}
-				DebugLogger.i("stop in sub thread:" + playerId);
+				DebugLogger.i("stop in sub thread start:" + playerId);
 				ClientApp.getInstance().GetSdkInterface()
 						.stopRealPlay(playerId);
 				ClientApp.getInstance().GetSdkInterface()
 						.DestroyPlayer(player);
+				DebugLogger.i("stop in sub thread end:" + playerId);
 				if (pendingPlayRunnable != null) {
 					DebugLogger.i("pending runnable running");
 					new Thread(pendingPlayRunnable).start();

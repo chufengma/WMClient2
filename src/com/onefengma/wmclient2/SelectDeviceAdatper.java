@@ -93,7 +93,7 @@ public class SelectDeviceAdatper extends BaseExpandableListAdapter implements On
 		}
 		WMDeviceInfo deviceInfo = getGroup(groupPosition);
 		WMChannelInfo channel = getChild(groupPosition, childPosition);
-		String channelName = Utils.isEmpty(channel.getChannelName()) ? "通道" + (childPosition+1) : channel.getChannelName(); 
+		String channelName = ViewUtils.genereateChannelName(channel); 
 		((TextView)(convertView.findViewById(R.id.name))).setText(channelName);
 		CheckBox checkBox = ((CheckBox)(convertView.findViewById(R.id.status)));
 		checkBox.setOnCheckedChangeListener(this);
