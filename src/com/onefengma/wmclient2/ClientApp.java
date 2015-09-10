@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -12,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.baidu.android.bbalbs.common.a.a;
 import com.wmclient.clientsdk.Constants;
 import com.wmclient.clientsdk.DebugLogger;
 import com.wmclient.clientsdk.Utils;
@@ -81,6 +83,12 @@ public class ClientApp extends Application {
         activities.add(activity);
     } 
     
+    public void removeActivity(Activity activity) {
+    	if (activities.contains(activity)) {
+    		activities.remove(activity);
+    	}
+    }
+    
     public void finishActivity(Activity activity){
         if (activity != null) {
             this.activities.remove(activity);
@@ -128,8 +136,8 @@ public class ClientApp extends Application {
         editor.commit();    	
     }
     
-    public void setNeedLogin() {
-    	sp.edit().putBoolean(SP_USER_NEED_LOGIN, true).commit();
+    public void setNeedLogin(boolean need) {
+    	sp.edit().putBoolean(SP_USER_NEED_LOGIN, need).commit();
     }
     
     public boolean needLogin() {
@@ -237,6 +245,7 @@ public class ClientApp extends Application {
     
     public void exit() {
     	for(Activity activity : activities) {
+    		DebugLogger.i("finish : " + activity);
     		activity.finish();
     	}
     }

@@ -57,6 +57,12 @@ public class MenuBaseActivity extends AppCompatActivity {
 	}
 	
 	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ClientApp.getInstance().removeActivity(this);
+	}
+	
+	@Override
 	public void setTitle(int titleId) {
 		setTitle(getString(titleId));
 	}

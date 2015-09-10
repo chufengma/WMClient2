@@ -88,10 +88,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 					}
 					showDownLoading();
 					startCheck(updateManager);
-				} else {
+				} else if (msg.arg1 == Constants.success){
 					ClientApp.getInstance().setHasLogin(true);
 					MainActivity.startFrom(LoginActivity.this);
 					finish();
+				} else if (msg.arg1 == Constants.ErrorCode_HasLogin){
+					ContextToast.show(LoginActivity.this, "登陆失败, 该帐号已经登录...",
+							Toast.LENGTH_SHORT);
+				} else {
+					ContextToast.show(LoginActivity.this, "登陆失败!",
+							Toast.LENGTH_SHORT);
 				}
 			}
 		};
@@ -213,6 +219,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 			}
 			int ret = ClientApp.getInstance().login(user, pwd);
 			message.arg1 = ret;
+			DebugLogger.i("login ret:" + ret);
 			if (ret == Constants.success) {
 				ClientApp.getInstance().storeAccountInfo(user, pwd);
 			}

@@ -13,6 +13,7 @@ public class AddDeviceActivity extends BaseBackActivity {
 		setTitle(R.string.title_activity_add_device);
 	}
 	
+	
 	public static void startFrom(Activity activity) {
 		activity.startActivity(new Intent(activity, AddDeviceActivity.class));
 	}

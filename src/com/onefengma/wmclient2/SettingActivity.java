@@ -85,7 +85,7 @@ public class SettingActivity extends MenuBaseActivity {
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.logout:
-			ClientApp.getInstance().setNeedLogin();
+			ClientApp.getInstance().setNeedLogin(true);
 			ClientApp.getInstance().GetSdkInterface().logout();
 			ClientApp.getInstance().exit();
 			LoginActivity.startFrom(this);

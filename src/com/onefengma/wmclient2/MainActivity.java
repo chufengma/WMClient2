@@ -45,6 +45,12 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 		setTitle(R.string.title_activity_devices);
 		listView = (PullToRefreshExpandableListView) findViewById(R.id.list);
 		
+		if (ClientApp.getInstance().needLogin()) {
+			startLogin();
+			finish();
+			return;
+		} 
+		
 		checkLogin();
 		
 		deviceList = new ArrayList<WMDeviceInfo>();
@@ -75,7 +81,7 @@ public class MainActivity extends MenuBaseActivity implements  OnRefreshListener
 				if(!ClientApp.getInstance().requestAddress()) {
 					startLogin();
 				}
-				if (ClientApp.getInstance().isAccountExisted() && ClientApp.getInstance().login()) {
+				if (ClientApp.getInstance().login()) {
 					deviceGoon();
 				} else {
 					startLogin();
