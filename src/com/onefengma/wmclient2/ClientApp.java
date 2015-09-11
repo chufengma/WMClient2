@@ -28,7 +28,7 @@ import android.os.Process;
 
 public class ClientApp extends Application {
 	
-	public static final String HOST = "http://www.vomont.com/veye/";
+	public static final String HOST = "http://www.51veye.com/";
 	
 	private static final String spFileName = "wmclientsp";	
 	private static final String SP_USER_NAME = "username";
